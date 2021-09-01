@@ -2,6 +2,10 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
+import {sprintf} from 'sprintf-js'
+
+import {vibrate} from './utils.js'
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -27,12 +31,22 @@ class CountdownTimer extends React.Component {
   }
 
   decrementSec = () => {
-    this.setState(prevState => ({seconds: prevState.seconds - 1}))
+    if (this.state.seconds > 0) {
+      this.setState(prevState => ({seconds: prevState.seconds - 1}))
+    }
   }
 
   render() {
+    if (this.state.seconds == 0) {
+      vibrate()
+    }
+
+    const minutesLeft = ~~(this.state.seconds / 60)
+    const secondsLeft = this.state.seconds % 60
+
+    const timeLeft = sprintf('%02d:%02d', minutesLeft, secondsLeft)
     return <Text style={styles.text_block}>
-              {~~(this.state.seconds / 60)}:{this.state.seconds % 60}
+            {timeLeft}
           </Text>
   }
 }
