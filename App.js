@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Button, StyleSheet, Text, View } from 'react-native';
 
 import {sprintf} from 'sprintf-js'
 
@@ -25,12 +25,28 @@ class CountdownTimer extends React.Component {
   constructor() {
     super()
     this.state = {
+      isRunning: true,
       isWork: true,
+
       messageArr: ["Rest Timer", "Work Timer"],
       secondsArr: [300, 1500],
+
       message: "Work Timer",
       seconds: 1500,
     }
+  }
+
+  startRunning() {
+    this.state.isRunning = true
+  }
+
+  stopRunning() {
+    this.state.isRunning = false
+  }
+
+  resetTimer() {
+    this.state.seconds = this.state.secondsArr[Number(this.state.isWork)]
+    this.state.isRunning = false
   }
 
   componentDidMount() {
@@ -38,7 +54,7 @@ class CountdownTimer extends React.Component {
   }
 
   decrementSec = () => {
-    if (this.state.seconds > 0) {
+    if (this.state.isRunning && this.state.seconds > 0) {
       this.setState(prevState => ({seconds: prevState.seconds - 1}))
     }
   }
@@ -60,6 +76,9 @@ class CountdownTimer extends React.Component {
     return <View style={styles.container}>
             <Text style={styles.text_block}>{currMessage}</Text>
             <Text style={styles.text_block}>{timeLeft}</Text>
+            <Button onPress={() => this.startRunning()} title="Start" />
+            <Button onPress={() => this.stopRunning()} title="Stop" />
+            <Button onPress={() => this.resetTimer()} title="Reset" />
            </View>
   }
 }
