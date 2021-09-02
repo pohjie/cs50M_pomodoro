@@ -22,8 +22,15 @@ const styles = StyleSheet.create({
 });
 
 class CountdownTimer extends React.Component {
-  state = {
-    seconds: 1500,
+  constructor() {
+    super()
+    this.state = {
+      isWork: true,
+      messageArr: ["Rest Timer", "Work Timer"],
+      secondsArr: [300, 1500],
+      message: "Work Timer",
+      seconds: 1500,
+    }
   }
 
   componentDidMount() {
@@ -37,28 +44,30 @@ class CountdownTimer extends React.Component {
   }
 
   render() {
-    if (this.state.seconds == 0) {
-      vibrate()
-    }
-
     const minutesLeft = ~~(this.state.seconds / 60)
     const secondsLeft = this.state.seconds % 60
 
     const timeLeft = sprintf('%02d:%02d', minutesLeft, secondsLeft)
-    return <Text style={styles.text_block}>
-            {timeLeft}
-          </Text>
+    const currMessage = this.state.message
+
+    if (this.state.seconds == 0) {
+      vibrate()
+      this.state.isWork = !this.state.isWork
+      this.state.message = this.state.messageArr[Number(this.state.isWork)]
+      this.state.seconds = this.state.secondsArr[Number(this.state.isWork)]
+    }
+
+    return <View style={styles.container}>
+            <Text style={styles.text_block}>{currMessage}</Text>
+            <Text style={styles.text_block}>{timeLeft}</Text>
+           </View>
   }
 }
 
 export default class App extends React.Component {
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.text_block}>Work Timer</Text>
         <CountdownTimer />
-      <StatusBar style="auto" />
-      </View>
     );
   }
 }
