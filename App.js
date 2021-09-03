@@ -22,10 +22,10 @@ const styles = StyleSheet.create({
 });
 
 class CountdownTimer extends React.Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.state = {
-      isRunning: true,
+      isRunning: false,
       isWork: true,
 
       messageArr: ["Rest Timer", "Work Timer"],
@@ -36,18 +36,18 @@ class CountdownTimer extends React.Component {
     }
   }
 
-  startRunning() {
-    this.state.isRunning = true
-  }
+  startRunning = () => this.setState(() => ({
+    isRunning: true,
+  }))
 
-  stopRunning() {
-    this.state.isRunning = false
-  }
+  stopRunning = () => this.setState(() => ({
+    isRunning: false,
+  }))
 
-  resetTimer() {
-    this.state.seconds = this.state.secondsArr[Number(this.state.isWork)]
-    this.state.isRunning = false
-  }
+  resetTimer = () => this.setState(prevState => ({
+    seconds: prevState.secondsArr[Number(prevState.isWork)],
+    isRunning: false,
+  }))
 
   componentDidMount() {
     this.timer = setInterval(this.decrementSec, 1000)
